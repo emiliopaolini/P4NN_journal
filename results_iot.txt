@@ -1,42 +1,24 @@
 Stateful - 1 LUT 
 Adam (0.001)
-    senza output quantizzato
-        4-bit: 0.45855212211608887
-        6-bit: 0.45299139618873596
-        8-bit: 0.4461168646812439
-        16-bit: 0.45510831475257874
-        32-bit: 0.4518668055534363
-    con output quantizzato
-        4-bit: 0.45392906665802
-        6-bit: 0.45724475383758545
-        8-bit: 0.4539009928703308
-        16-bit: 0.45728522539138794
-        32-bit: 0.4553350806236267
+    4-bit: 0.42091065645217896
+    6-bit: 0.45714253187179565
+    8-bit: 0.45451855659484863
+    16-bit: 0.4878743290901184
+    32-bit: 0.5063289403915405
 
-Adam (0.0001)
-    senza output quantizzato
-        4-bit: 0.4499896168708801
-        6-bit: 
-        8-bit: 
-        16-bit: 
-        32-bit: 
-    con output quantizzato
-        4-bit: 
-        6-bit: 
-        8-bit: 
-        16-bit: 
-        32-bit: 
-Adam (0.01)
-    senza output quantizzato
-        4-bit: 0.45272815227508545
-        6-bit: 
-        8-bit: 
-        16-bit: 
-        32-bit: 
-    con output quantizzato
-        4-bit: 
-        6-bit: 
-        8-bit: 
-        16-bit: 
-        32-bit: 
-    
+Stateless - 5 LUT 
+Adam (0.001)
+    4-bit: 0.7537419199943542
+    6-bit: 0.9101823568344116
+    8-bit: 0.9107680916786194
+    16-bit: 0.818035900592804
+    32-bit: 0.8297281861305237
+
+
+ALL - 7 LUT 
+Adam (0.001)
+    4-bit: 0.82140
+    6-bit: 0.5844780206680298
+    8-bit: 
+    16-bit: 
+    32-bit: 
