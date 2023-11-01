@@ -126,9 +126,9 @@ def f1_m(y_true, y_pred):
     return 2*((precision*recall)/(precision+recall+K.epsilon()))
   
 
+
 input_1 = X_train['swin']
 input_2 = X_train['s_TTL']
-
 
 input_3 = X_train['dwin']
 input_4 = X_train['IP_proto']
@@ -138,7 +138,6 @@ input_6 = X_train['d_bytes'] #13
 
 input_7 = X_train['ct_dst_ltm']
 input_8 = X_train['s_bytes'] #13
-
 
 
 input_1_val = X_test['swin']
@@ -163,7 +162,7 @@ print(model.summary())
 model.compile(loss='binary_crossentropy', optimizer=opt, metrics=['accuracy',f1_m,precision_m,recall_m])
 
 
-checkpoint_filepath = '/tmp/model'
+checkpoint_filepath = '/tmp/model'+str(nn.bitwidth)+'all'
 
 checkpoint = ModelCheckpoint(filepath=checkpoint_filepath, monitor='val_f1_m',
                             verbose=1, save_best_only=True,save_weights_only=True, mode='max')
@@ -171,19 +170,19 @@ checkpoint = ModelCheckpoint(filepath=checkpoint_filepath, monitor='val_f1_m',
 # all features
 history = model.fit([input_1,input_2,input_3,input_4,input_5,input_6,input_7,input_8], y_train,
                     validation_data = ([input_1_val,input_2_val,input_3_val,input_4_val,input_5_val,input_6_val,input_7_val,input_8_val],y_test)
-                    ,batch_size=256,epochs=10,shuffle=True,callbacks=[checkpoint])
+                    ,batch_size=256,epochs=50,shuffle=True,callbacks=[checkpoint])
 # stateless
 #history = model.fit([input_1,input_2,input_3,input_4,input_6,input_8], y_train,
 #                    validation_data = ([input_1_val,input_2_val,input_3_val,input_4_val,input_6_val,input_8_val],y_test)
-#                    ,batch_size=256,epochs=10,shuffle=True,callbacks=[checkpoint])
+#                    ,batch_size=256,epochs=100,shuffle=True,callbacks=[checkpoint])
 # stateful
 #history = model.fit([input_5,input_7], y_train,
 #                    validation_data = ([input_5_val,input_7_val],y_test)
-#                    ,batch_size=256,epochs=20,shuffle=True,callbacks=[checkpoint])
+#                    ,batch_size=256,epochs=100,shuffle=True,callbacks=[checkpoint])
 
 model.load_weights(checkpoint_filepath)
 
-model.save('models/unsw_stateless_4_bit.h5')
+model.save('models/unsw_stateless_'+str(nn.bitwidth)+'_bit.h5')
 
 #print(model.evaluate([input_5_val,input_7_val],y_test,batch_size=256))
 #print(model.evaluate([input_1_val,input_2_val,input_3_val,input_4_val,input_6_val,input_8_val],y_test,batch_size=256))

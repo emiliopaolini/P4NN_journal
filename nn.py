@@ -1,14 +1,14 @@
 import larq as lq
 from tensorflow.keras.layers import Input, Dense, Concatenate, Add, BatchNormalization
 from tensorflow.keras import Model
-from keras.utils.vis_utils import plot_model
+from tensorflow.keras.utils import plot_model
 
-
+bitwidth = 4
+    
 def nn():
     
     # FIRST MODELS
-    bitwidth = 6
-    
+
     # MODEL 1
     model1_in_1 = Input(shape=(1,),name='input1')
     model1_in_1_quant = lq.quantizers.DoReFa(k_bit=bitwidth, mode="activations",name='quant_input_11')(model1_in_1)
@@ -48,7 +48,7 @@ def nn():
 
     plot_model(model2, to_file='model_plot_2.png', show_shapes=True, show_layer_names=True)
 
-
+    
     # MODEL 3
     model3_in_1 = Input(shape=(1,),name='input5')
     model3_in_1_quant = lq.quantizers.DoReFa(k_bit=bitwidth, mode="activations",name='quant_input_31')(model3_in_1)
@@ -86,7 +86,6 @@ def nn():
     model4 = Model([model4_in_1,model4_in_2], model4_out_2)
 
     plot_model(model4, to_file='model_plot_4.png', show_shapes=True, show_layer_names=True)
-    
 
     
     
@@ -155,11 +154,11 @@ def nn():
     
     plot_model(model7, to_file='model_plot_7.png', show_shapes=True, show_layer_names=True)
     return model7
-    '''
-
-
-
     
+
+
+
+    '''
     # for stateless features
 
 
@@ -189,8 +188,8 @@ def nn():
     
     # For stateful
 
-
-    bitwidth = 4
+    
+    bitwidth = 32
 
 
     model1_in_1 = Input(shape=(1,),name='input1')
