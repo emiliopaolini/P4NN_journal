@@ -159,7 +159,7 @@ model = nn.nn()
 
 print(model.summary())
 
-model.compile(loss='binary_crossentropy', optimizer=opt, metrics=['accuracy',f1_m,precision_m,recall_m])
+model.compile(loss='sparse_categorical_crossentropy', optimizer=opt, metrics=['accuracy',f1_m,precision_m,recall_m])
 
 
 checkpoint_filepath = '/tmp/model'+str(nn.bitwidth)+'all'
@@ -187,3 +187,12 @@ model.save('models/unsw_stateless_'+str(nn.bitwidth)+'_bit.h5')
 #print(model.evaluate([input_5_val,input_7_val],y_test,batch_size=256))
 #print(model.evaluate([input_1_val,input_2_val,input_3_val,input_4_val,input_6_val,input_8_val],y_test,batch_size=256))
 print(model.evaluate([input_1_val,input_2_val,input_3_val,input_4_val,input_5_val,input_6_val,input_7_val,input_8_val],y_test,batch_size=256))
+
+
+
+selector = fs.SelectKBest(fs.f_classif, k=FEATURE_NUMBERS)
+X = selector.fit_transform(X, y)
+
+best_columns = selector.get_support(indices=True)
+
+print("Best features: ",COLUMNS[best_columns])

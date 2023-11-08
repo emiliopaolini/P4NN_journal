@@ -1,0 +1,25 @@
+bit refers to the number of bits for each feature
+
+2 features - 1 LUT 
+Adam (0.001)
+    4-bit: 
+    6-bit: 
+    8-bit: 
+    16-bit: 
+    32-bit: 
+
+6 features - 5 LUT 
+Adam (0.001)
+    4-bit: 
+    6-bit: 
+    8-bit: 
+    16-bit: 
+    32-bit: 
+
+8 features features - 7 LUT 
+Adam (0.001)
+    4-bit: 0.8167938590049744
+    6-bit: 0.9807339310646057
+    8-bit: 
+    16-bit:  
+    32-bit: 
