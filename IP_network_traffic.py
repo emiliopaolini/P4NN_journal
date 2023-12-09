@@ -131,7 +131,7 @@ y = y_dataset.to_numpy()
 print("X SHAPE: ",X.shape)
 print("Y SHAPE: ",y.shape)
 
-FEATURE_NUMBERS = 2
+FEATURE_NUMBERS = 8
 BITWIDTH = 4
 CLASS_NUMBER = 4
 
