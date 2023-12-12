@@ -1,7 +1,9 @@
 import pandas as pd
 import numpy as np
 import new_nn as nn
+import tensorflow_addons as tfa
 
+from keras.utils import to_categorical
 import sklearn.feature_selection as fs
 from sklearn.utils import class_weight
 from tensorflow import keras
@@ -14,24 +16,15 @@ from sklearn.preprocessing import MinMaxScaler
 from imblearn.under_sampling import RandomUnderSampler
 from sklearn.preprocessing import LabelEncoder
 
-def recall_m(y_true, y_pred):
+def f1_metric(y_true, y_pred):
     true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
     possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
-    recall = true_positives / (possible_positives + K.epsilon())
-    return recall
-
-def precision_m(y_true, y_pred):
-    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
     predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
     precision = true_positives / (predicted_positives + K.epsilon())
-    return precision
+    recall = true_positives / (possible_positives + K.epsilon())
+    f1_val = 2*(precision*recall)/(precision+recall+K.epsilon())
+    return f1_val
 
-def f1_m(y_true, y_pred):
-    precision = precision_m(y_true, y_pred)
-    recall = recall_m(y_true, y_pred)
-    return 2*((precision*recall)/(precision+recall+K.epsilon()))
-
-# data from: https://www.kaggle.com/datasets/mrwellsdavid/unsw-nb15?select=UNSW-NB15_LIST_EVENTS.csv
 
 data = pd.read_csv("./data/Unicauca-dataset-April-June-2019-Network-flows.csv",header=0,sep=',')
 
@@ -43,8 +36,9 @@ data.replace([np.inf, -np.inf], np.nan, inplace=True)
 data.dropna(inplace=True)
 data.drop_duplicates(inplace = True)
 
+print(data['application_protocol'].value_counts())
 
-requiredProtocolName = ['TLS','DNS','HTTP']
+requiredProtocolName = ['TLS','DNS','HTTP','QUIC']
 
 
 data = data.loc[data['application_protocol'].isin(requiredProtocolName)]
@@ -72,9 +66,9 @@ y = y_dataset.to_numpy()
 print("X SHAPE: ",X.shape)
 print("Y SHAPE: ",y.shape)
 
-FEATURE_NUMBERS = 8
+FEATURE_NUMBERS = 2
 BITWIDTH = 4
-CLASS_NUMBER = 3
+CLASS_NUMBER = 4
 
 selector = fs.SelectKBest(fs.f_classif, k=FEATURE_NUMBERS)
 X = selector.fit_transform(X, y)
@@ -91,8 +85,22 @@ print("Y distribution: ",np.unique(y,return_counts=True))
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33,stratify=y)
 
+print("Data before balancing")
+print(np.unique(y_train,return_counts=True))
+
 print("Y train: ",np.unique(y_train,return_counts=True))
 print("Y test: ",np.unique(y_test,return_counts=True))
+
+
+undersampler = RandomUnderSampler(sampling_strategy='all')
+
+X_train,y_train = undersampler.fit_resample(X_train, y_train)
+
+print("Data after balancing")
+print(np.unique(y_train,return_counts=True))
+
+
+
 
 if FEATURE_NUMBERS==8:
     # instantiate full model
@@ -113,24 +121,27 @@ class_weights = class_weight.compute_class_weight(
                                         y = np.array(y_train)
                                     )
 
+
 dic_weights = dict(zip(np.unique(y_train), class_weights))
 print("DICT",dic_weights)
 
-opt = keras.optimizers.Adam()
-model.compile(loss='sparse_categorical_crossentropy', optimizer=opt, metrics=['accuracy'])
+y_train = to_categorical(y_train)
+y_test = to_categorical(y_test)
+
+opt = keras.optimizers.Adam(learning_rate=0.001)
+model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy',f1_metric])
 
 checkpoint_filepath = '/tmp/model'+str(BITWIDTH)+'all'
 
-checkpoint = ModelCheckpoint(filepath=checkpoint_filepath, monitor='val_accuracy',
+checkpoint = ModelCheckpoint(filepath=checkpoint_filepath, monitor='val_f1_metric',
                             verbose=1, save_best_only=True,save_weights_only=True, mode='max')
 
-print(y_train.shape)
-print(X_train.shape)
+
 
 if FEATURE_NUMBERS==8:
     # instantiate full model
     history = model.fit([X_train[:,0],X_train[:,1],X_train[:,2],X_train[:,3],X_train[:,4],X_train[:,5],X_train[:,6],X_train[:,7]], y_train,
-                    batch_size=256,epochs=50,shuffle=True,class_weight= dic_weights,callbacks=[checkpoint],
+                    batch_size=256,epochs=25,shuffle=True,class_weight= dic_weights,callbacks=[checkpoint],
                     validation_data = ([X_test[:,0],X_test[:,1],X_test[:,2],X_test[:,3],X_test[:,4],X_test[:,5],X_test[:,6],X_test[:,7]],y_test))
 
     model.load_weights(checkpoint_filepath)
@@ -141,7 +152,7 @@ if FEATURE_NUMBERS==8:
 if FEATURE_NUMBERS==6:
     # instantiate middle model
     history = model.fit([X_train[:,0],X_train[:,1],X_train[:,2],X_train[:,3],X_train[:,4],X_train[:,5]], y_train,
-                    batch_size=256,epochs=50,shuffle=True,class_weight= dic_weights,callbacks=[checkpoint],
+                    batch_size=128,epochs=25,shuffle=True,class_weight= dic_weights,callbacks=[checkpoint],
                     validation_data = ([X_test[:,0],X_test[:,1],X_test[:,2],X_test[:,3],X_test[:,4],X_test[:,5]],y_test))
 
     model.load_weights(checkpoint_filepath)
@@ -150,7 +161,7 @@ if FEATURE_NUMBERS==6:
     print(model.evaluate([X_test[:,0],X_test[:,1],X_test[:,2],X_test[:,3],X_test[:,4],X_test[:,5]],y_test,batch_size=256))
 if FEATURE_NUMBERS==2:
     history = model.fit([X_train[:,0],X_train[:,1]], y_train,
-                    batch_size=256,epochs=50,shuffle=True,class_weight= dic_weights,callbacks=[checkpoint],
+                    batch_size=128,epochs=25,shuffle=True,class_weight= dic_weights,callbacks=[checkpoint],
                     validation_data = ([X_test[:,0],X_test[:,1]],y_test))
 
     model.load_weights(checkpoint_filepath)

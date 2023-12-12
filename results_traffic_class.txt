@@ -1,0 +1,29 @@
+bit refers to the number of bits for each feature
+
+'TLS','DNS','HTTP','QUIC'
+Best features:  Index(['proto', 'min_ps', 'max_ps', 'f_max_ps', 'f_flowEnd', 'b_min_ps',
+       'b_max_ps', 'b_flowDuration']),
+
+2 features - 1 LUT 
+Adam (0.001)
+    4-bit: 0.8895
+    6-bit: 0.8894
+    8-bit: 0.8897
+    16-bit: 0.8894
+    32-bit: 0.8897
+
+6 features - 5 LUT 
+Adam (0.001)
+    4-bit: 0.9047
+    6-bit: 0.9050
+    8-bit: 0.8776
+    16-bit: 0.8952
+    32-bit: 0.8743
+
+8 features features - 7 LUT 
+Adam (0.001)
+    4-bit: 0.7861
+    6-bit: 0.7975
+    8-bit: 0.9044
+    16-bit: 0.8567
+    32-bit: 0.8884
