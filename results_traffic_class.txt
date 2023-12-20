@@ -1,29 +1,39 @@
 bit refers to the number of bits for each feature
 
-'TLS','DNS','HTTP','QUIC'
-Best features:  Index(['proto', 'min_ps', 'max_ps', 'f_max_ps', 'f_flowEnd', 'b_min_ps',
-       'b_max_ps', 'b_flowDuration']),
+relu as activation function
+
+Best features:  
+8 features -> ['proto', 'min_ps', 'max_ps', 'f_max_ps', 'f_flowEnd', 'b_min_ps', 'b_max_ps', 'b_flowDuration']
+
+6 features -> 'proto', 'max_ps', 'f_max_ps', 'f_flowEnd', 'b_max_ps','b_flowDuration'
+
+2 features -> 
+
+3 classes:
+1 -> Streaming, Media, Music, Video, Game
+2 -> Network
+3 -> VoIP
 
 2 features - 1 LUT 
 Adam (0.001)
-    4-bit: 0.8895
-    6-bit: 0.8894
-    8-bit: 0.8897
-    16-bit: 0.8894
-    32-bit: 0.8897
+    4-bit: 0.8372840285301208
+    6-bit: 0.8370901942253113
+    8-bit: 0.8373369574546814
+    16-bit: 0.8376283645629883
+    32-bit: 0.8375728130340576
 
 6 features - 5 LUT 
 Adam (0.001)
-    4-bit: 0.9047
-    6-bit: 0.9050
-    8-bit: 0.8776
-    16-bit: 0.8952
-    32-bit: 0.8743
+    4-bit: 0.8152152895927429
+    6-bit: 0.8316896557807922
+    8-bit: 0.8344212770462036
+    16-bit: 0.8505409359931946
+    32-bit: 0.8577998876571655
 
 8 features features - 7 LUT 
 Adam (0.001)
-    4-bit: 0.7861
-    6-bit: 0.7975
-    8-bit: 0.9044
-    16-bit: 0.8567
-    32-bit: 0.8884
+    4-bit: 0.8521140813827515
+    6-bit: 0.8847944140434265
+    8-bit: 0.8504467606544495
+    16-bit: 0.8993271589279175
+    32-bit: 0.9126664996147156

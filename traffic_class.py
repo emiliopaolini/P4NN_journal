@@ -1,6 +1,6 @@
 import pandas as pd
 import numpy as np
-import new_nn as nn
+import new_nn_traffic as nn
 import tensorflow_addons as tfa
 
 from keras.utils import to_categorical
@@ -36,31 +36,35 @@ data.replace([np.inf, -np.inf], np.nan, inplace=True)
 data.dropna(inplace=True)
 data.drop_duplicates(inplace = True)
 
-print(data['application_protocol'].value_counts())
-
-requiredProtocolName = ['TLS','DNS','HTTP','QUIC']
+print(data['category'].value_counts())
 
 
-data = data.loc[data['application_protocol'].isin(requiredProtocolName)]
 
-print(data["application_protocol"].value_counts())
-
-
-data.drop(['category','web_service','flowEndReason','src_ip_numeric','src_ip','dst_ip','dst_port','src_port'],axis=1,inplace=True)
+data.drop(['application_protocol','web_service','flowEndReason','src_ip_numeric','src_ip','dst_ip','dst_port','src_port'],axis=1,inplace=True)
 
 data = data[data.columns.drop(list(data.filter(regex='std_dev')))]
 data = data[data.columns.drop(list(data.filter(regex='avg')))]
 
 COLUMNS = data.columns
 
-encoder = LabelEncoder().fit(data['application_protocol'])
-data['application_protocol'] = encoder.transform(data['application_protocol'])
-print(data['application_protocol'])
+
+conversion_dict = {"Streaming":1,"Media":1,"Music":1, "Video":1,"Game":1,"Network":2,"VoIP":3}
+
+data['category'] = data['category'].replace(conversion_dict)
 
 
-x_dataset = data.drop(['application_protocol'], axis = 1)
+values_to_delete = ["Download-FileTransfer-FileSharing","Chat" ,"Web",'Unspecified','DataTransfer',"Game",'Cloud','Collaborative','System','SoftwareUpdate','RemoteAccess','RPC','Database','Streaming','VPN','Shopping','Mining',"SocialNetwork","Email"]
+data = data[~data['category'].isin(values_to_delete)]
+
+print(data["category"].value_counts())
+
+encoder = LabelEncoder().fit(data['category'])
+data['category'] = encoder.transform(data['category'])
+print(data['category'])
+
+x_dataset = data.drop(['category'], axis = 1)
 X = x_dataset.to_numpy()
-y_dataset = data['application_protocol']
+y_dataset = data['category']
 y = y_dataset.to_numpy()
 
 print("X SHAPE: ",X.shape)
@@ -68,7 +72,7 @@ print("Y SHAPE: ",y.shape)
 
 FEATURE_NUMBERS = 2
 BITWIDTH = 4
-CLASS_NUMBER = 4
+CLASS_NUMBER = 3
 
 selector = fs.SelectKBest(fs.f_classif, k=FEATURE_NUMBERS)
 X = selector.fit_transform(X, y)
@@ -93,7 +97,6 @@ print("Y test: ",np.unique(y_test,return_counts=True))
 
 
 undersampler = RandomUnderSampler(sampling_strategy='all')
-
 X_train,y_train = undersampler.fit_resample(X_train, y_train)
 
 print("Data after balancing")
@@ -128,7 +131,7 @@ print("DICT",dic_weights)
 y_train = to_categorical(y_train)
 y_test = to_categorical(y_test)
 
-opt = keras.optimizers.Adam(learning_rate=0.001)
+opt = keras.optimizers.Adam(learning_rate=0.0001)
 model.compile(loss='categorical_crossentropy', optimizer=opt, metrics=['accuracy',f1_metric])
 
 checkpoint_filepath = '/tmp/model'+str(BITWIDTH)+'all'
@@ -141,7 +144,7 @@ checkpoint = ModelCheckpoint(filepath=checkpoint_filepath, monitor='val_f1_metri
 if FEATURE_NUMBERS==8:
     # instantiate full model
     history = model.fit([X_train[:,0],X_train[:,1],X_train[:,2],X_train[:,3],X_train[:,4],X_train[:,5],X_train[:,6],X_train[:,7]], y_train,
-                    batch_size=256,epochs=25,shuffle=True,class_weight= dic_weights,callbacks=[checkpoint],
+                    batch_size=256,epochs=30,shuffle=True,class_weight= dic_weights,callbacks=[checkpoint],
                     validation_data = ([X_test[:,0],X_test[:,1],X_test[:,2],X_test[:,3],X_test[:,4],X_test[:,5],X_test[:,6],X_test[:,7]],y_test))
 
     model.load_weights(checkpoint_filepath)
@@ -152,7 +155,7 @@ if FEATURE_NUMBERS==8:
 if FEATURE_NUMBERS==6:
     # instantiate middle model
     history = model.fit([X_train[:,0],X_train[:,1],X_train[:,2],X_train[:,3],X_train[:,4],X_train[:,5]], y_train,
-                    batch_size=128,epochs=25,shuffle=True,class_weight= dic_weights,callbacks=[checkpoint],
+                    batch_size=256,epochs=30,shuffle=True,class_weight= dic_weights,callbacks=[checkpoint],
                     validation_data = ([X_test[:,0],X_test[:,1],X_test[:,2],X_test[:,3],X_test[:,4],X_test[:,5]],y_test))
 
     model.load_weights(checkpoint_filepath)
@@ -161,7 +164,7 @@ if FEATURE_NUMBERS==6:
     print(model.evaluate([X_test[:,0],X_test[:,1],X_test[:,2],X_test[:,3],X_test[:,4],X_test[:,5]],y_test,batch_size=256))
 if FEATURE_NUMBERS==2:
     history = model.fit([X_train[:,0],X_train[:,1]], y_train,
-                    batch_size=128,epochs=25,shuffle=True,class_weight= dic_weights,callbacks=[checkpoint],
+                    batch_size=256,epochs=30,shuffle=True,class_weight= dic_weights,callbacks=[checkpoint],
                     validation_data = ([X_test[:,0],X_test[:,1]],y_test))
 
     model.load_weights(checkpoint_filepath)

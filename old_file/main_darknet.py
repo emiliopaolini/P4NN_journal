@@ -1,4 +1,4 @@
-import new_nn as nn
+import new_nn_cic as nn
 import numpy as np
 import pandas as pd
 import tensorflow as tf

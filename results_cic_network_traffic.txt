@@ -1,0 +1,36 @@
+4 classes 
+Benign, DoS attacks-Hulk, DoS attacks-GoldenEye, DDOS attack-HOIC
+
+bit refers to the number of bits for each feature
+
+Best features:  
+
+8 features -> 'Fwd Pkt Len Max', 'Bwd Pkt Len Min', 'Pkt Len Max', 'ACK Flag Cnt','Pkt Size Avg', 'Fwd Seg Size Avg', 'Init Bwd Win Byts','Fwd Seg Size Min'
+
+6 features -> 'Fwd Pkt Len Max', 'Pkt Len Max', 'ACK Flag Cnt', 'Pkt Size Avg', 'Fwd Seg Size Avg', 'Fwd Seg Size Min'
+
+2 features -> 'ACK Flag Cnt', 'Fwd Seg Size Min'
+
+2 features - 1 LUT 
+Adam (0.001)
+    4-bit: 0.7180995941162109
+    6-bit: 0.7182762026786804
+    8-bit: 0.7175981402397156
+    16-bit: 0.7175453305244446
+    32-bit: 0.7198760509490967
+
+6 features - 5 LUT 
+Adam (0.001)
+    4-bit: 0.6736013293266296
+    6-bit: 0.8448070287704468
+    8-bit: 0.868866503238678
+    16-bit: 0.8221657276153564
+    32-bit: 0.8511483073234558
+
+8 features features - 7 LUT 
+Adam (0.001)
+    4-bit: 0.698313295841217
+    6-bit: 0.8632893562316895
+    8-bit: 0.83705073595047
+    16-bit: 0.8643033504486084
+    32-bit: 0.8787937760353088
