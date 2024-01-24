@@ -28,6 +28,7 @@ import new_nn_cic as nn
 import tensorflow_addons as tfa 
 from keras.utils import to_categorical
 
+import single_lut_nn
 
 from scipy.io.arff import loadarff
 from sklearn.preprocessing import MinMaxScaler
@@ -108,6 +109,8 @@ data.drop(['Dst Port'],axis=1,inplace=True)
 
 data = data[data.columns.drop(list(data.filter(regex='Std')))]
 data = data[data.columns.drop(list(data.filter(regex='Mean')))]
+data = data[data.columns.drop(list(data.filter(regex='Avg')))]
+
 
 COLUMNS = data.columns
 
@@ -124,12 +127,14 @@ y = y_dataset.to_numpy()
 print("X SHAPE: ",X.shape)
 print("Y SHAPE: ",y.shape)
 
-FEATURE_NUMBERS = 2
+FEATURE_NUMBERS = 8
 BITWIDTH = 4
 CLASS_NUMBER = 4
 
 selector = fs.SelectKBest(fs.f_classif, k=FEATURE_NUMBERS)
 X = selector.fit_transform(X, y)
+
+FEATURE_NUMBERS = -1
 
 best_columns = selector.get_support(indices=True)
 print("Best features: ",COLUMNS[best_columns])
@@ -154,6 +159,9 @@ print("Y test: ",np.unique(y_test,return_counts=True))
 
 print("Data after balancing")
 print(np.unique(y_train,return_counts=True))
+
+if FEATURE_NUMBERS == -1:
+    model = single_lut_nn.nn(bitwidth=BITWIDTH,LUT=1,class_number=CLASS_NUMBER)
 
 if FEATURE_NUMBERS==8:
     # instantiate full model
@@ -199,7 +207,17 @@ checkpoint = ModelCheckpoint(filepath=checkpoint_filepath, monitor='val_f1_metri
 print(y_train.shape)
 print(X_train.shape)
 
-if FEATURE_NUMBERS==8:
+if FEATURE_NUMBERS==-1:
+    history = model.fit(X_train, y_train,
+                    batch_size=128,epochs=50   ,shuffle=True,class_weight= dic_weights,callbacks=[checkpoint],
+                    validation_data = (X_test,y_test))
+
+    model.load_weights(checkpoint_filepath)
+    
+
+    print(model.evaluate(X_test,y_test,batch_size=256))
+
+if FEATURE_NUMBERS==8 :
     # instantiate full model
     history = model.fit([X_train[:,0],X_train[:,1],X_train[:,2],X_train[:,3],X_train[:,4],X_train[:,5],X_train[:,6],X_train[:,7]], y_train,
                     batch_size=128,epochs=50   ,shuffle=True,class_weight= dic_weights,callbacks=[checkpoint],

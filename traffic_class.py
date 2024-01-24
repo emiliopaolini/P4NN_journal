@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import new_nn_traffic as nn
 import tensorflow_addons as tfa
-
+import single_lut_nn
 from keras.utils import to_categorical
 import sklearn.feature_selection as fs
 from sklearn.utils import class_weight
@@ -71,11 +71,13 @@ print("X SHAPE: ",X.shape)
 print("Y SHAPE: ",y.shape)
 
 FEATURE_NUMBERS = 2
-BITWIDTH = 4
+BITWIDTH = 8
 CLASS_NUMBER = 3
 
 selector = fs.SelectKBest(fs.f_classif, k=FEATURE_NUMBERS)
 X = selector.fit_transform(X, y)
+
+#FEATURE_NUMBERS = -1
 
 best_columns = selector.get_support(indices=True)
 print("Best features: ",COLUMNS[best_columns])
@@ -104,6 +106,8 @@ print(np.unique(y_train,return_counts=True))
 
 
 
+if FEATURE_NUMBERS == -1:
+    model = single_lut_nn.nn(bitwidth=BITWIDTH,LUT=1,class_number=CLASS_NUMBER)
 
 if FEATURE_NUMBERS==8:
     # instantiate full model
@@ -140,6 +144,15 @@ checkpoint = ModelCheckpoint(filepath=checkpoint_filepath, monitor='val_f1_metri
                             verbose=1, save_best_only=True,save_weights_only=True, mode='max')
 
 
+if FEATURE_NUMBERS==-1:
+    history = model.fit(X_train, y_train,
+                    batch_size=256,epochs=50   ,shuffle=True,class_weight= dic_weights,callbacks=[checkpoint],
+                    validation_data = (X_test,y_test))
+
+    model.load_weights(checkpoint_filepath)
+    
+
+    print(model.evaluate(X_test,y_test,batch_size=256))
 
 if FEATURE_NUMBERS==8:
     # instantiate full model

@@ -16,14 +16,14 @@ def nn(bitwidth, LUT,class_number):
         model_1_concatenated = Concatenate()([model1_in_1_quant, model1_in_2_quant])
 
         
-        model1_layer_1 = Dense(512, activation='relu', name='model1_layer_1')(model_1_concatenated)
+        model1_layer_1 = Dense(256, activation='tanh', name='model1_layer_1')(model_1_concatenated)
         model1_bn_1 = BatchNormalization()(model1_layer_1)
         
         
-        model1_layer_2 = Dense(128, activation='relu', name='model1_layer_2')(model1_bn_1)
+        model1_layer_2 = Dense(128, activation='tanh', name='model1_layer_2')(model1_bn_1)
         model1_bn_2 = BatchNormalization()(model1_layer_2)
         
-        model1_layer_3 = Dense(32, activation='relu', name='model1_layer_3')(model1_bn_2)
+        model1_layer_3 = Dense(32, activation='tanh', name='model1_layer_3')(model1_bn_2)
         model1_bn_3 = BatchNormalization()(model1_layer_3)
         
         model1_out = Dense(class_number, activation='softmax', name='model1_out')(model1_bn_3)
@@ -45,16 +45,16 @@ def nn(bitwidth, LUT,class_number):
         model_1_concatenated = Concatenate()([model1_in_1_quant, model1_in_2_quant])
 
         
-        model1_layer_1 = Dense(512, activation='relu', name='model1_layer_1')(model_1_concatenated)
+        model1_layer_1 = Dense(256, activation='tanh', name='model1_layer_1')(model_1_concatenated)
         model1_bn_1 = BatchNormalization()(model1_layer_1)
         
-        model1_layer_2 = Dense(128, activation='relu', name='model1_layer_2')(model1_bn_1)
+        model1_layer_2 = Dense(128, activation='tanh', name='model1_layer_2')(model1_bn_1)
         model1_bn_2 = BatchNormalization()(model1_layer_2)
         
-        model1_layer_3 = Dense(32, activation='relu', name='model1_layer_3')(model1_bn_2)
+        model1_layer_3 = Dense(32, activation='tanh', name='model1_layer_3')(model1_bn_2)
         model1_bn_3 = BatchNormalization()(model1_layer_3)
         
-        model1_out = Dense(1, activation='relu', name='model1_out')(model1_bn_3)
+        model1_out = Dense(1, activation='tanh', name='model1_out')(model1_bn_3)
 
         model1 = Model([model1_in_1,model1_in_2], model1_out)
 
@@ -68,16 +68,16 @@ def nn(bitwidth, LUT,class_number):
         model_2_concatenated = Concatenate()([model2_in_1_quant, model2_in_2_quant])
 
         
-        model2_layer_1 = Dense(512, activation='relu', name='model2_layer_1')(model_2_concatenated)
+        model2_layer_1 = Dense(256, activation='tanh', name='model2_layer_1')(model_2_concatenated)
         model2_bn_1 = BatchNormalization()(model2_layer_1)
         
-        model2_layer_2 = Dense(128, activation='relu', name='model2_layer_2')(model2_bn_1)
+        model2_layer_2 = Dense(128, activation='tanh', name='model2_layer_2')(model2_bn_1)
         model2_bn_2 = BatchNormalization()(model2_layer_2)
         
-        model2_layer_3 = Dense(32, activation='relu', name='model2_layer_3')(model2_bn_2)
+        model2_layer_3 = Dense(32, activation='tanh', name='model2_layer_3')(model2_bn_2)
         model2_bn_3 = BatchNormalization()(model2_layer_3)
         
-        model2_out = Dense(1, activation='relu', name='model2_out')(model2_bn_3)
+        model2_out = Dense(1, activation='tanh', name='model2_out')(model2_bn_3)
 
         model2 = Model([model2_in_1,model2_in_2], model2_out)
 
@@ -91,17 +91,17 @@ def nn(bitwidth, LUT,class_number):
         model_3_concatenated = Concatenate()([model3_in_1_quant, model3_in_2_quant])
 
         
-        model3_layer_1 = Dense(512, activation='relu', name='model3_layer_1')(model_3_concatenated)
+        model3_layer_1 = Dense(256, activation='tanh', name='model3_layer_1')(model_3_concatenated)
         model3_bn_1 = BatchNormalization()(model3_layer_1)
         
-        model3_layer_2 = Dense(128, activation='relu', name='model3_layer_2')(model3_bn_1)
+        model3_layer_2 = Dense(128, activation='tanh', name='model3_layer_2')(model3_bn_1)
         model3_bn_2 = BatchNormalization()(model3_layer_2)
         
-        model3_layer_3 = Dense(32, activation='relu', name='model3_layer_3')(model3_bn_2)
+        model3_layer_3 = Dense(32, activation='tanh', name='model3_layer_3')(model3_bn_2)
         model3_bn_3 = BatchNormalization()(model3_layer_3)
         
         
-        model3_out = Dense(1, activation='relu', name='model3_out')(model3_bn_3)
+        model3_out = Dense(1, activation='tanh', name='model3_out')(model3_bn_3)
 
         model3 = Model([model3_in_1,model3_in_2], model3_out)
 
@@ -113,16 +113,16 @@ def nn(bitwidth, LUT,class_number):
         model5_in_2_quant = lq.quantizers.DoReFa(k_bit=bitwidth, mode="activations",name='model5_in_2_quant')(model2.output)
         model_5_concatenated = Concatenate()([model5_in_1_quant, model5_in_2_quant])
         
-        model5_layer_1 = Dense(512, activation='relu', name='model5_layer_1')(model_5_concatenated)
+        model5_layer_1 = Dense(256, activation='tanh', name='model5_layer_1')(model_5_concatenated)
         model5_bn_1  = BatchNormalization()(model5_layer_1)
         
-        model5_layer_2 = Dense(128, activation='relu', name='model5_layer_2')(model5_bn_1)
+        model5_layer_2 = Dense(128, activation='tanh', name='model5_layer_2')(model5_bn_1)
         model5_bn_2 = BatchNormalization()(model5_layer_2)
         
-        model5_layer_3 = Dense(32, activation='relu', name='model5_layer_3')(model5_bn_2)
+        model5_layer_3 = Dense(32, activation='tanh', name='model5_layer_3')(model5_bn_2)
         model5_bn_3 = BatchNormalization()(model5_layer_3)
         
-        model5_out = Dense(1, activation='relu', name='model5_out')(model5_bn_3)
+        model5_out = Dense(1, activation='tanh', name='model5_out')(model5_bn_3)
 
         model5 = Model([model1.input, model2.input], model5_out)
 
@@ -133,15 +133,15 @@ def nn(bitwidth, LUT,class_number):
         model7_in_2_quant = lq.quantizers.DoReFa(k_bit=bitwidth, mode="activations",name='model7_in_2_quant')(model5.output)
         model_7_concatenated = Concatenate()([model7_in_1_quant, model7_in_2_quant])
         
-        model7_layer_1 = Dense(512, activation='relu', name='model7_layer_1')(model_7_concatenated)
+        model7_layer_1 = Dense(256, activation='tanh', name='model7_layer_1')(model_7_concatenated)
         model7_bn_1  = BatchNormalization()(model7_layer_1)
         
         
-        model7_layer_2 = Dense(128, activation='relu', name='model7_layer_2')(model7_bn_1)
+        model7_layer_2 = Dense(128, activation='tanh', name='model7_layer_2')(model7_bn_1)
         model7_bn_2 = BatchNormalization()(model7_layer_2)
         
         
-        model7_layer_3 = Dense(32, activation='relu', name='model7_layer_3')(model7_bn_2)
+        model7_layer_3 = Dense(32, activation='tanh', name='model7_layer_3')(model7_bn_2)
         model7_bn_3 = BatchNormalization()(model7_layer_3)
         
 
@@ -170,19 +170,19 @@ def nn(bitwidth, LUT,class_number):
         model_1_concatenated = Concatenate()([model1_in_1_quant, model1_in_2_quant])
 
         
-        model1_layer_1 = Dense(512, activation='relu', name='model1_layer_1')(model_1_concatenated)
+        model1_layer_1 = Dense(256, activation='tanh', name='model1_layer_1')(model_1_concatenated)
         model1_bn_1 = BatchNormalization()(model1_layer_1)
         
         
-        model1_layer_2 = Dense(128, activation='relu', name='model1_layer_2')(model1_bn_1)
+        model1_layer_2 = Dense(128, activation='tanh', name='model1_layer_2')(model1_bn_1)
         model1_bn_2 = BatchNormalization()(model1_layer_2)
 
         
-        model1_layer_3 = Dense(32, activation='relu', name='model1_layer_3')(model1_bn_2)
+        model1_layer_3 = Dense(32, activation='tanh', name='model1_layer_3')(model1_bn_2)
         model1_bn_3 = BatchNormalization()(model1_layer_3)
 
         
-        model1_out = Dense(1, activation='relu', name='model1_out')(model1_bn_3)
+        model1_out = Dense(1, activation='tanh', name='model1_out')(model1_bn_3)
 
 
         model1 = Model([model1_in_1,model1_in_2], model1_out)
@@ -197,17 +197,17 @@ def nn(bitwidth, LUT,class_number):
         model_2_concatenated = Concatenate()([model2_in_1_quant, model2_in_2_quant])
 
         
-        model2_layer_1 = Dense(512, activation='relu', name='model2_layer_1')(model_2_concatenated)
+        model2_layer_1 = Dense(256, activation='tanh', name='model2_layer_1')(model_2_concatenated)
         model2_bn_1 = BatchNormalization()(model2_layer_1)
 
         
-        model2_layer_2 = Dense(128, activation='relu', name='model2_layer_2')(model2_bn_1)
+        model2_layer_2 = Dense(128, activation='tanh', name='model2_layer_2')(model2_bn_1)
         model2_bn_2 = BatchNormalization()(model2_layer_2)
         
-        model2_layer_3 = Dense(32, activation='relu', name='model2_layer_3')(model2_bn_2)
+        model2_layer_3 = Dense(32, activation='tanh', name='model2_layer_3')(model2_bn_2)
         model2_bn_3 = BatchNormalization()(model2_layer_3)
 
-        model2_out = Dense(1, activation='relu', name='model2_out')(model2_bn_3)
+        model2_out = Dense(1, activation='tanh', name='model2_out')(model2_bn_3)
 
         model2 = Model([model2_in_1,model2_in_2], model2_out)
 
@@ -221,16 +221,16 @@ def nn(bitwidth, LUT,class_number):
         model_3_concatenated = Concatenate()([model3_in_1_quant, model3_in_2_quant])
 
         
-        model3_layer_1 = Dense(512, activation='relu', name='model3_layer_1')(model_3_concatenated)
+        model3_layer_1 = Dense(256, activation='tanh', name='model3_layer_1')(model_3_concatenated)
         model3_bn_1 = BatchNormalization()(model3_layer_1)
 
-        model3_layer_2 = Dense(128, activation='relu', name='model3_layer_2')(model3_bn_1)
+        model3_layer_2 = Dense(128, activation='tanh', name='model3_layer_2')(model3_bn_1)
         model3_bn_2 = BatchNormalization()(model3_layer_2)
         
-        model3_layer_3 = Dense(32, activation='relu', name='model3_layer_3')(model3_bn_2)
+        model3_layer_3 = Dense(32, activation='tanh', name='model3_layer_3')(model3_bn_2)
         model3_bn_3 = BatchNormalization()(model3_layer_3)
 
-        model3_out = Dense(1, activation='relu', name='model3_out')(model3_bn_3)
+        model3_out = Dense(1, activation='tanh', name='model3_out')(model3_bn_3)
 
         model3 = Model([model3_in_1,model3_in_2], model3_out)
 
@@ -244,16 +244,16 @@ def nn(bitwidth, LUT,class_number):
         model_4_concatenated = Concatenate()([model4_in_1_quant, model4_in_2_quant])
 
         
-        model4_layer_1 = Dense(512, activation='relu', name='model4_layer_1')(model_4_concatenated)
+        model4_layer_1 = Dense(256, activation='tanh', name='model4_layer_1')(model_4_concatenated)
         model4_bn_1 = BatchNormalization()(model4_layer_1)
 
-        model4_layer_2 = Dense(128, activation='relu', name='model4_layer_2')(model4_bn_1)
+        model4_layer_2 = Dense(128, activation='tanh', name='model4_layer_2')(model4_bn_1)
         model4_bn_2 = BatchNormalization()(model4_layer_2)
         
-        model4_layer_3 = Dense(32, activation='relu', name='model4_layer_3')(model4_bn_2)
+        model4_layer_3 = Dense(32, activation='tanh', name='model4_layer_3')(model4_bn_2)
         model4_bn_3 = BatchNormalization()(model4_layer_3)
 
-        model4_out = Dense(1, activation='relu', name='model4_out')(model4_bn_3)
+        model4_out = Dense(1, activation='tanh', name='model4_out')(model4_bn_3)
 
         model4 = Model([model4_in_1,model4_in_2], model4_out)
 
@@ -265,16 +265,16 @@ def nn(bitwidth, LUT,class_number):
         model5_in_2_quant = lq.quantizers.DoReFa(k_bit=bitwidth, mode="activations",name='model5_in_2_quant')(model2.output)
         model_5_concatenated = Concatenate()([model5_in_1_quant, model5_in_2_quant])
         
-        model5_layer_1 = Dense(512, activation='relu', name='model5_layer_1')(model_5_concatenated)
+        model5_layer_1 = Dense(256, activation='tanh', name='model5_layer_1')(model_5_concatenated)
         model5_bn_1  = BatchNormalization()(model5_layer_1)
         
-        model5_layer_2 = Dense(128, activation='relu', name='model5_layer_2')(model5_bn_1)
+        model5_layer_2 = Dense(128, activation='tanh', name='model5_layer_2')(model5_bn_1)
         model5_bn_2 = BatchNormalization()(model5_layer_2)
         
-        model5_layer_3 = Dense(32, activation='relu', name='model5_layer_3')(model5_bn_2)
+        model5_layer_3 = Dense(32, activation='tanh', name='model5_layer_3')(model5_bn_2)
         model5_bn_3 = BatchNormalization()(model5_layer_3)
         
-        model5_out = Dense(1, activation='relu', name='model5_out')(model5_bn_3)
+        model5_out = Dense(1, activation='tanh', name='model5_out')(model5_bn_3)
 
         model5 = Model([model1.input, model2.input], model5_out)
 
@@ -284,17 +284,17 @@ def nn(bitwidth, LUT,class_number):
         model_6_concatenated = Concatenate()([model6_in_1_quant, model6_in_2_quant])
         
 
-        model6_layer_1 = Dense(512, activation='relu', name='model6_layer_1')(model_6_concatenated)
+        model6_layer_1 = Dense(256, activation='tanh', name='model6_layer_1')(model_6_concatenated)
         model6_bn_1  = BatchNormalization()(model6_layer_1)
 
         
-        model6_layer_2 = Dense(128, activation='relu', name='model6_layer_2')(model6_bn_1)
+        model6_layer_2 = Dense(128, activation='tanh', name='model6_layer_2')(model6_bn_1)
         model6_bn_2 = BatchNormalization()(model6_layer_2)
 
-        model6_layer_3 = Dense(32, activation='relu', name='model6_layer_3')(model6_bn_2)
+        model6_layer_3 = Dense(32, activation='tanh', name='model6_layer_3')(model6_bn_2)
         model6_bn_3 = BatchNormalization()(model6_layer_3)
         
-        model6_out = Dense(1, activation='relu', name='model6_out')(model6_bn_3)
+        model6_out = Dense(1, activation='tanh', name='model6_out')(model6_bn_3)
 
         model6 = Model([model3.input, model4.input], model6_out)
 
@@ -313,14 +313,14 @@ def nn(bitwidth, LUT,class_number):
         
 
         
-        model7_layer_1 = Dense(512, activation='relu', name='model7_layer_1')(model_7_concatenated)
+        model7_layer_1 = Dense(256, activation='tanh', name='model7_layer_1')(model_7_concatenated)
         model7_bn_1  = BatchNormalization()(model7_layer_1)
 
 
-        model7_layer_2 = Dense(128, activation='relu', name='model7_layer_2')(model7_bn_1)
+        model7_layer_2 = Dense(128, activation='tanh', name='model7_layer_2')(model7_bn_1)
         model7_bn_2 = BatchNormalization()(model7_layer_2)
         
-        model7_layer_3 = Dense(32, activation='relu', name='model7_layer_3')(model7_bn_2)
+        model7_layer_3 = Dense(32, activation='tanh', name='model7_layer_3')(model7_bn_2)
         model7_bn_3 = BatchNormalization()(model7_layer_3)
         
         model7_out = Dense(class_number, activation='softmax', name='model7_out')(model7_bn_3)
