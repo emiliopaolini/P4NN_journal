@@ -128,13 +128,13 @@ print("X SHAPE: ",X.shape)
 print("Y SHAPE: ",y.shape)
 
 FEATURE_NUMBERS = 8
-BITWIDTH = 4
+BITWIDTH = 8
 CLASS_NUMBER = 4
 
 selector = fs.SelectKBest(fs.f_classif, k=FEATURE_NUMBERS)
 X = selector.fit_transform(X, y)
 
-FEATURE_NUMBERS = -1
+#FEATURE_NUMBERS = -1
 
 best_columns = selector.get_support(indices=True)
 print("Best features: ",COLUMNS[best_columns])

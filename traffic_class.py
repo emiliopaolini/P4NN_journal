@@ -36,9 +36,29 @@ data.replace([np.inf, -np.inf], np.nan, inplace=True)
 data.dropna(inplace=True)
 data.drop_duplicates(inplace = True)
 
+
+'''
+percentage_to_delete = 99
+total_rows_with_value = data[data['category'] == "Web"].shape[0]
+rows_to_delete = int(total_rows_with_value * (percentage_to_delete / 100))
+rows_to_delete_indices = data[data['category'] == "Web"].sample(n=rows_to_delete).index
+data.drop(rows_to_delete_indices, inplace=True)
+
+
+percentage_to_delete = 50
+total_rows_with_value = data[data['category'] == "SocialNetwork"].shape[0]
+rows_to_delete = int(total_rows_with_value * (percentage_to_delete / 100))
+rows_to_delete_indices = data[data['category'] == "SocialNetwork"].sample(n=rows_to_delete).index
+data.drop(rows_to_delete_indices, inplace=True)
+
+percentage_to_delete = 50
+total_rows_with_value = data[data['category'] == "Network"].shape[0]
+rows_to_delete = int(total_rows_with_value * (percentage_to_delete / 100))
+rows_to_delete_indices = data[data['category'] == "Network"].sample(n=rows_to_delete).index
+data.drop(rows_to_delete_indices, inplace=True)
+'''
+
 print(data['category'].value_counts())
-
-
 
 data.drop(['application_protocol','web_service','flowEndReason','src_ip_numeric','src_ip','dst_ip','dst_port','src_port'],axis=1,inplace=True)
 
@@ -47,13 +67,16 @@ data = data[data.columns.drop(list(data.filter(regex='avg')))]
 
 COLUMNS = data.columns
 
-
-conversion_dict = {"Streaming":1,"Media":1,"Music":1, "Video":1,"Game":1,"Network":2,"VoIP":3}
+#binary mapping
+conversion_dict = {"Streaming":0,
+                   "Chat":1,"Email":1,}
 
 data['category'] = data['category'].replace(conversion_dict)
 
 
-values_to_delete = ["Download-FileTransfer-FileSharing","Chat" ,"Web",'Unspecified','DataTransfer',"Game",'Cloud','Collaborative','System','SoftwareUpdate','RemoteAccess','RPC','Database','Streaming','VPN','Shopping','Mining',"SocialNetwork","Email"]
+values_to_delete = ["Game","VoIP","Download-FileTransfer-FileSharing","Network",'Unspecified',"Music","SocialNetwork",
+                    "Media","Video",'DataTransfer',"Game",'Cloud','Collaborative','System','SoftwareUpdate',
+                    'RemoteAccess','RPC','Database','VPN','Shopping','Mining','Web']
 data = data[~data['category'].isin(values_to_delete)]
 
 print(data["category"].value_counts())
@@ -70,9 +93,9 @@ y = y_dataset.to_numpy()
 print("X SHAPE: ",X.shape)
 print("Y SHAPE: ",y.shape)
 
-FEATURE_NUMBERS = 2
+FEATURE_NUMBERS = 8
 BITWIDTH = 8
-CLASS_NUMBER = 3
+CLASS_NUMBER = 2
 
 selector = fs.SelectKBest(fs.f_classif, k=FEATURE_NUMBERS)
 X = selector.fit_transform(X, y)
@@ -96,11 +119,10 @@ print(np.unique(y_train,return_counts=True))
 
 print("Y train: ",np.unique(y_train,return_counts=True))
 print("Y test: ",np.unique(y_test,return_counts=True))
-
-
+'''
 undersampler = RandomUnderSampler(sampling_strategy='all')
 X_train,y_train = undersampler.fit_resample(X_train, y_train)
-
+'''
 print("Data after balancing")
 print(np.unique(y_train,return_counts=True))
 

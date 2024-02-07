@@ -3,6 +3,38 @@ Benign, DoS attacks-Hulk, DoS attacks-GoldenEye, DDOS attack-HOIC
 
 bit refers to the number of bits for each feature
 
+
+
+BINARY:
+
+8 features -> 'Fwd Pkt Len Max', 'Fwd Pkt Len Min', 'Bwd Pkt Len Min', 'Pkt Len Min', 'Pkt Len Max', 'ACK Flag Cnt', 'Init Bwd Win Byts', 'Fwd Seg Size Min'
+
+6 features ->  'Fwd Pkt Len Max', 'Bwd Pkt Len Min', 'Pkt Len Min', 'ACK Flag Cnt', 'Init Bwd Win Byts', 'Fwd Seg Size Min'
+
+2 features -> 'ACK Flag Cnt', 'Fwd Seg Size Min'
+
+
+2 features - 1 LUT 
+Adam (0.001)
+    4-bit: 0.8033244609832764
+    6-bit: 0.8093191385269165
+    8-bit: 0.8111402988433838
+    
+6 features - 5 LUT 
+Adam (0.0001)
+    4-bit: 0.8751102089881897
+    6-bit: 0.8952897787094116
+    8-bit: 0.9171436429023743
+    
+8 features features - 7 LUT 
+Adam (0.0001)
+    4-bit: 0.8882196545600891
+    6-bit: 0.8969113230705261
+    8-bit: 0.926886260509491
+    
+
+MULTI-CLASS:
+
 Best features:  
 
 8 features -> 'Fwd Pkt Len Max', 'Bwd Pkt Len Max', 'Pkt Len Max', 'RST Flag Cnt', 'ACK Flag Cnt', 'ECE Flag Cnt', 'Init Bwd Win Byts', 'Fwd Seg Size Min'
@@ -11,32 +43,20 @@ Best features:
 
 2 features -> 'ACK Flag Cnt', 'Fwd Seg Size Min'
 
-8 features - 1 LUT 
-    4-bit: 0.847601592540741
-    6-bit: 0.8493005037307739
-    8-bit: 0.9059754014015198
-
-
 2 features - 1 LUT 
 Adam (0.001)
     4-bit: 0.7145018577575684
     6-bit: 0.7192800641059875
     8-bit: 0.7194924354553223
-    16-bit: 0.717182993888855
-    32-bit: 0.718112051486969
-
+    
 6 features - 5 LUT 
 Adam (0.0001)
-    4-bit: 0.6635873913764954
+    4-bit: 0.8152313232421875
     6-bit: 0.84027498960495
     8-bit: 0.8748108744621277
-    16-bit: 0.8707228302955627
-    32-bit: 0.8687584400177002
-
+    
 8 features features - 7 LUT 
 Adam (0.0001)
-    4-bit: 0.7355525493621826
-    6-bit: 0.7791404724121094
-    8-bit: 0.850043773651123
-    16-bit: 0.8569079446792603
-    32-bit: 0.8701842522621155
+    4-bit: 0.8161666393280029
+    6-bit: 0.8420425057411194
+    8-bit: 0.8796616888046265
