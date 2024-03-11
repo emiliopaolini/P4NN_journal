@@ -1,0 +1,64 @@
+bit refers to the number of bits for each feature
+
+relu as activation function
+
+BINARY
+2 classes:
+0 -> DoS,Mirai,Spoofing
+1 -> Benign
+
+Best features:  
+8 features -> 
+
+6 features -> 
+
+2 features -> 
+
+2 features - 1 LUT 
+Adam (0.001)
+    4-bit: 
+    6-bit: 
+    8-bit: 
+
+6 features - 5 LUT 
+Adam (0.001)
+    4-bit: 
+    6-bit: 
+    8-bit: 
+
+8 features features - 7 LUT 
+Adam (0.001)
+    4-bit: 
+    6-bit: 
+    8-bit: ì
+
+
+MULTI-CLASS
+
+"DoS","Mirai","Benign","Spoofing"
+
+Best features:  
+8 features -> 'duration', 'ack_flag_number', 'rst_count', 'https', 'tot_sum', 'min', 'max', 'tot_size'
+
+6 features -> 'duration', 'ack_flag_number', 'https', 'tot_sum', 'min', 'tot_size'
+
+2 features -> 'ack_flag_number', 'min'
+
+2 features - 1 LUT 
+Adam (0.001)
+    4-bit: 0.9111017489433289
+    6-bit: 0.9174476265907288
+    8-bit: 0.9198638200759888
+
+6 features - 5 LUT 
+Adam (0.001)
+    4-bit: 
+    6-bit: 
+    8-bit: 
+
+8 features features - 7 LUT 
+Adam (0.001)
+    4-bit: 
+    6-bit: 
+    8-bit: 0.8309547305107117
+
