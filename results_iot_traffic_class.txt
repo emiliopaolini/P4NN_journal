@@ -4,61 +4,61 @@ relu as activation function
 
 BINARY
 2 classes:
-0 -> DoS,Mirai,Spoofing
-1 -> Benign
+0 -> "Normal"
+1 -> "DoS","Scan","MITM ARP Spoofing"
 
 Best features:  
-8 features -> 
+8 features -> 'Protocol', 'Fwd_Pkt_Len_Max', 'Bwd_Pkt_Len_Max', 'Bwd_Pkt_Len_Min', 'Pkt_Len_Max', 'ACK_Flag_Cnt', 'Subflow_Fwd_Byts', 'Init_Bwd_Win_Byts'
 
-6 features -> 
+6 features ->  'Protocol', 'Fwd_Pkt_Len_Max', 'Bwd_Pkt_Len_Max', 'Bwd_Pkt_Len_Min','Pkt_Len_Max', 'ACK_Flag_Cnt'
 
-2 features -> 
+2 features -> 'Protocol', 'ACK_Flag_Cnt'
 
 2 features - 1 LUT 
 Adam (0.001)
-    4-bit: 
-    6-bit: 
-    8-bit: 
+    4-bit: 0.834152340888977
+    6-bit: 0.834189236164093
+    8-bit: 0.8342076539993286
 
 6 features - 5 LUT 
 Adam (0.001)
-    4-bit: 
-    6-bit: 
-    8-bit: 
+    4-bit: 0.8434417247772217
+    6-bit: 0.8549691438674927
+    8-bit: 0.8554137945175171
 
 8 features features - 7 LUT 
 Adam (0.001)
-    4-bit: 
-    6-bit: 
-    8-bit: ì
+    4-bit: 0.8828050494194031
+    6-bit: 0.8934937715530396
+    8-bit: 0.9139741253852844
 
 
 MULTI-CLASS
 
-"DoS","Mirai","Benign","Spoofing"
+"Normal","DoS","Scan","MITM ARP Spoofing"
 
 Best features:  
-8 features -> 'duration', 'ack_flag_number', 'rst_count', 'https', 'tot_sum', 'min', 'max', 'tot_size'
+8 features -> 'Flow_Pkts/s', 'Flow_IAT_Min', 'Fwd_Pkts/s', 'Bwd_Pkts/s','Pkt_Len_Max', 'SYN_Flag_Cnt', 'ACK_Flag_Cnt', 'Idle_Min'
 
-6 features -> 'duration', 'ack_flag_number', 'https', 'tot_sum', 'min', 'tot_size'
+6 features -> 'Flow_Pkts/s', 'Fwd_Pkts/s', 'Bwd_Pkts/s', 'Pkt_Len_Max','SYN_Flag_Cnt', 'ACK_Flag_Cnt'
 
-2 features -> 'ack_flag_number', 'min'
+2 features -> 'SYN_Flag_Cnt', 'ACK_Flag_Cnt'
 
 2 features - 1 LUT 
 Adam (0.001)
-    4-bit: 0.9111017489433289
-    6-bit: 0.9174476265907288
-    8-bit: 0.9198638200759888
+    4-bit: 0.43267303705215454
+    6-bit: 0.4347817897796631
+    8-bit: 0.439909428358078
 
 6 features - 5 LUT 
 Adam (0.001)
-    4-bit: 
-    6-bit: 
-    8-bit: 
+    4-bit: 0.8093670010566711
+    6-bit: 0.8283098936080933
+    8-bit: 0.8320516347885132
 
 8 features features - 7 LUT 
 Adam (0.001)
-    4-bit: 
-    6-bit: 
-    8-bit: 0.8309547305107117
+    4-bit: 0.8211322522163391
+    6-bit: 0.8398724889755249
+    8-bit: 0.8410118913650513
 

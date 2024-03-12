@@ -1,7 +1,7 @@
 import pandas as pd
 import numpy as np
 import tensorflow as tf
-import new_nn_traffic as nn
+import new_nn_traffic_binary as nn
 import tensorflow_addons as tfa
 import single_lut_nn
 from keras.utils import to_categorical
@@ -46,7 +46,7 @@ data = pd.read_csv("./data/IoT Network Intrusion Dataset.csv",sep=',',header=0)
 #print(data['Sub_Cat'].value_counts())
 
 
-data.drop(['Flow_ID','Src_Port','Src_IP','Dst_IP','Dst_Port','Sub_Cat','Label','Timestamp'],axis=1,inplace=True)
+data.drop(['Flow_ID','Src_Port','Src_IP','Dst_IP','Dst_Port','Sub_Cat','Timestamp'],axis=1,inplace=True)
 
 
 data = data[data.columns.drop(list(data.filter(regex='Mean')))]
@@ -62,7 +62,7 @@ with pd.option_context('display.max_rows', None,
                        'display.precision', 3,
                        ):
     #print(data['Label'].value_counts())
-    print(data['Cat'].value_counts())
+    print(data['Label'].value_counts())
     #print(data['Sub_Cat'].value_counts())
     
 #convert_columns(data)
@@ -70,17 +70,27 @@ with pd.option_context('display.max_rows', None,
 print(data.head())
 
 
+'''
+labels_to_keep = ["Normal","DoS","Scan","MITM ARP Spoofing"]
+data = data.loc[data['Cat'].isin(labels_to_keep)]
+
+'''
+data.drop(['Cat'],axis=1,inplace=True)
+
 COLUMNS = data.columns
 
-#print(COLUMNS)
+labels_to_keep = ["Normal","Anomaly"]
+conversion_dict = {"Normal":0,"Anomaly":1}
 
-
-
-labels_to_keep = ["Normal","DoS","Scan","MITM ARP Spoofing"]
-conversion_dict = {"Normal":0,"DoS":1,"Scan":2,"MITM ARP Spoofing":3}
-
-data = data.loc[data['Cat'].isin(labels_to_keep)]
-data['Cat'] = data['Cat'].replace(conversion_dict)
+'''
+percentage_to_delete = 70
+total_rows_with_value = data[data['Label'] == "Anomaly"].shape[0]
+rows_to_delete = int(total_rows_with_value * (percentage_to_delete / 100))
+rows_to_delete_indices = data[data['Label'] == "Anomaly"].sample(n=rows_to_delete).index
+data.drop(rows_to_delete_indices, inplace=True)
+'''
+data = data.loc[data['Label'].isin(labels_to_keep)]
+data['Label'] = data['Label'].replace(conversion_dict)
 
 
 #encoder = LabelEncoder().fit(data['Cat'])
@@ -88,17 +98,20 @@ data['Cat'] = data['Cat'].replace(conversion_dict)
 #print(data['Cat'])
 
 
-x_dataset = data.drop(['Cat'], axis = 1)
+x_dataset = data.drop(['Label'], axis = 1)
 X = x_dataset.to_numpy()
-y_dataset = data['Cat']
+y_dataset = data['Label']
 y = y_dataset.to_numpy()
+
+
+
 
 print("X SHAPE: ",X.shape)
 print("Y SHAPE: ",y.shape)
 
 FEATURE_NUMBERS = 8
-BITWIDTH = 8
-CLASS_NUMBER = 4
+BITWIDTH = 4
+CLASS_NUMBER = 2
 
 selector = fs.SelectKBest(fs.f_classif, k=FEATURE_NUMBERS)
 X = selector.fit_transform(X, y)
@@ -116,20 +129,20 @@ X = scaler.fit_transform(X)
 
 print("Y distribution: ",np.unique(y,return_counts=True))
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25,stratify=y)
 
 print("Data before balancing")
 print(np.unique(y_train,return_counts=True))
 
 print("Y train: ",np.unique(y_train,return_counts=True))
 print("Y test: ",np.unique(y_test,return_counts=True))
-'''
+
 undersampler = RandomUnderSampler(sampling_strategy='all')
 X_train,y_train = undersampler.fit_resample(X_train, y_train)
 '''
 print("Data after balancing")
 print(np.unique(y_train,return_counts=True))
-
+'''
 if FEATURE_NUMBERS == -1:
     model = single_lut_nn.nn(bitwidth=BITWIDTH,LUT=1,class_number=CLASS_NUMBER)
 
@@ -183,13 +196,12 @@ if FEATURE_NUMBERS==8:
     # instantiate full model
 
     history = model.fit([X_train[:,0],X_train[:,1],X_train[:,2],X_train[:,3],X_train[:,4],X_train[:,5],X_train[:,6],X_train[:,7]], y_train,
-                    batch_size=256,epochs=100,shuffle=True,class_weight= dic_weights,callbacks=[checkpoint],
+                    batch_size=64,epochs=100,shuffle=True,class_weight= dic_weights,callbacks=[checkpoint],
                     validation_data = ([X_test[:,0],X_test[:,1],X_test[:,2],X_test[:,3],X_test[:,4],X_test[:,5],X_test[:,6],X_test[:,7]],y_test))
-
     model.load_weights(checkpoint_filepath)
     
 
-    print(model.evaluate([X_test[:,0],X_test[:,1],X_test[:,2],X_test[:,3],X_test[:,4],X_test[:,5],X_test[:,6],X_test[:,7]],y_test,batch_size=256))
+    print(model.evaluate([X_test[:,0],X_test[:,1],X_test[:,2],X_test[:,3],X_test[:,4],X_test[:,5],X_test[:,6],X_test[:,7]],y_test,batch_size=128))
 
 if FEATURE_NUMBERS==6:
     # instantiate middle model
